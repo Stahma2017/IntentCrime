@@ -59,27 +59,111 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>{
+    private class SeriousCrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        private Crime mCrime;
+
+       /* public void bind(Crime crime){
+            mCrime = crime;
+            mTitleTextView.setText(mCrime.getTitle());
+            mDateTextView.setText(mCrime.getDate().toString());
+        }*/
+        private TextView mTitleTextView;
+        private TextView mDateTextView;
+
+        public TextView getTitleTextView(){
+            return mTitleTextView;
+        }
+        public TextView getDateTextView(){
+            return mDateTextView;
+        }
+
+        public SeriousCrimeHolder(LayoutInflater inflater, ViewGroup parent){
+            super(inflater.inflate(R.layout.list_item_serious_crime, parent, false));
+            itemView.setOnClickListener(this);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.serious_crime_title);
+            mDateTextView = (TextView) itemView.findViewById(R.id.serious_crime_date);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(getActivity(), mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    private class CrimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private List<Crime> mCrimes;
+        private final int SERIOUS_CRIME =1,EASY_CRIME = 0;
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mCrimes.get(position).isRequiresPolice()){
+                return SERIOUS_CRIME;
+            }else {
+                return EASY_CRIME;
+            }
+        }
 
         public CrimeAdapter(List<Crime> crimes){
             mCrimes = crimes;
+
         }
+        /*if (viewType==0){
+                layoutInflater.inflate(R.layout.list_item_crime,parent,false);
+                return new CrimeHolder(layoutInflater, parent);
+            }else {
+                layoutInflater.inflate(R.layout.list_item_serious_crime,parent,false);
+                return new SeriousCrimeHolder(layoutInflater, parent);
+            }*/
 
         @NonNull
         @Override
-        public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+           RecyclerView.ViewHolder viewHolder;
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return  new CrimeHolder(layoutInflater, parent);
+
+            switch (viewType){
+                case SERIOUS_CRIME:
+                    layoutInflater.inflate(R.layout.list_item_serious_crime,
+                            parent, false);
+                    viewHolder = new SeriousCrimeHolder(layoutInflater, parent);
+                    break;
+                case EASY_CRIME:
+                    layoutInflater.inflate(R.layout.list_item_serious_crime,
+                            parent, false);
+                    viewHolder = new CrimeHolder(layoutInflater, parent);
+                    break;
+                default:
+                    layoutInflater.inflate(R.layout.list_item_serious_crime,
+                            parent, false);
+                    viewHolder = new CrimeHolder(layoutInflater, parent);
+                    break;
+            }
+            return viewHolder;
         }
 
+        private void seriousBind(SeriousCrimeHolder holder, Crime crime){
+            holder.getDateTextView().setText(crime.getDate().toString());
+            holder.getTitleTextView().setText(crime.getTitle());
+        }
+
+
         @Override
-        public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            holder.bind(crime);
 
-
+            switch (holder.getItemViewType()){
+                case SERIOUS_CRIME:
+                    SeriousCrimeHolder sch = (SeriousCrimeHolder) holder;
+                    seriousBind(sch, crime);
+                    break;
+                case EASY_CRIME:
+                    CrimeHolder ch = (CrimeHolder) holder;
+                    ch.bind(crime);
+                    break;
+            }
         }
 
         @Override

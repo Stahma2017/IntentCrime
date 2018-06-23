@@ -7,16 +7,13 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/crime_title"
-
+        android:id="@+id/serious_crime_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crime Title"
-        android:textSize="18sp"/>
+        android:text="Crime Title"/>
 
     <TextView
-        android:id="@+id/crime_date"
-
+        android:id="@+id/serious_crime_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Crime Date"/>

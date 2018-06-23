@@ -7,6 +7,5 @@ public class CrimeListActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         return new CrimeListFragment();
     }
-    
-    //Someone else fixes my bugs!
+    //This is me who should fix my bugs
 }
